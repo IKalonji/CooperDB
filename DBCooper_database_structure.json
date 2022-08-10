@@ -1,0 +1,30 @@
+{"name": "<CooperDB_Name>",
+ "tables": 
+    [
+        {
+            "columns": 
+            [
+                {
+                    "name": "<Column_Name>", 
+                    "type": "<Data_Type>",
+                    "attributes": 
+                    {
+                        "primary_key": "<True/False>",
+                        "unique": "<True/False>",
+                        "foreign_key": 
+                        {
+                            "table": "<Foreign_Table_Name>",
+                            "column": "<Foreign_Column_Name>"
+                        }
+                    }
+                }
+            ],
+            "data": 
+            [
+                {"TestColumn": "TestValue"}
+            ],
+            "name": "TestTable"
+        }
+    ]
+}
+
