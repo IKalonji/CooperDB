@@ -85,7 +85,7 @@ def parse_create_table(input_dict):
     """
 
     table_columns = []
-    database = input_dict["database_name"]
+    database = input_dict['database_name']
 
     for table_column in input_dict['columns']:
         try:
@@ -175,7 +175,9 @@ def parse_delete_all_from_table(input_dict):
         table_name: "table_name"
     }
     """
-
+    database = input_dict["database_name"]
+    #if database in 
+    table = input_dict["table_name"]
     pass
 
 def parse_delete_row_from_table(input_dict):
@@ -266,11 +268,30 @@ def parse_join_tables(input_dict):
     """
     pass
 
+def DatabaseExists(database_name):
+    if database_name not in DBCooper_Mapping:
+        raise Exception("Database '{}' does not exist".format(database_name))
+    return True
+
+def TableExists(database_name, table_name):
+    DatabaseExists(database_name)
+    if table_name not in DBCooper_Mapping[database_name].database.tables:
+        raise Exception("Table '{}' does not exist".format(table_name))
+    return True
+
+def ColumnExists(database_name, table_name, column_name):
+    TableExists(database_name, table_name)
+    if column_name not in DBCooper_Mapping[database_name].database.tables[table_name].culumns:
+        raise Exception("Culumn ''{} does not exist".format(column_name))
+    return True
+
+
+
 
 parse_create_database({"database_name": "database_name"})
-parse_create_table({"name": "table_name",
-                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]
-                    }
-                , DBCooper_Mapping["database_name"])
+parse_create_table({"name": "table_name", "database_name": "database_name", "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]})
 
-pprint(dataclasses.asdict(DBCooper_Mapping['database_name'].database))
+print(TableExists("database_name", "jdfjgfd"))
+print(DBCooper_Mapping)
+
+"""pprint(dataclasses.asdict(DBCooper_Mapping['database_name'].database))"""
