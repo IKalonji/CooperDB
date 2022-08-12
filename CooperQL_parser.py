@@ -44,7 +44,7 @@ def parse_input(query, input_dict):
         "join_tables": parse_join_tables
     }
 
-    if query in query_store:
+    if query not in query_store:
         raise Exception("Provided query is invalid")
     return query_store[query](input_dict)
 
