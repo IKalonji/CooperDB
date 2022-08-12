@@ -32,6 +32,7 @@ def parse_input(input_dict):
         "create_database": parse_create_database,
         "create_table": parse_create_table,
         "insert_into_table": parse_insert_into_table,
+        "delete_database": parse_delete_database,
         "delete_all_from_table": parse_delete_all_from_table,
         "delete_row_from_table": parse_delete_row_from_table,
         "delete_all_from_database": parse_delete_all_from_database,
@@ -148,6 +149,23 @@ def parse_insert_into_table(input_dict, database:CooperDB):
         table.insert_row(input_dict['data'])
         return table
 
+def parse_delete_database(input_dict):
+    """
+    Parse the input list and return a table object.
+    example input dict: Delete database
+    {
+        query: "delete_database",
+        database_name: "database_name"
+    }
+    """
+
+    database = input_dict["database_name"]
+    if database not in DBCooper_Mapping:
+        raise Exception("Database does not exists")
+    DBCooper_Mapping.pop()
+
+    pass
+
 def parse_delete_all_from_table(input_dict, database):
     """
     Parse the input list and return a table object.
@@ -157,6 +175,7 @@ def parse_delete_all_from_table(input_dict, database):
         table_name: "table_name"
     }
     """
+
     pass
 
 def parse_delete_row_from_table(input_dict, database):
