@@ -15,6 +15,7 @@ DB-Cupa Domain specific language:
 
 '''
 
+from ast import Raise
 import dataclasses
 import re
 from DBCooper import CooperDB
@@ -24,7 +25,7 @@ from pprint import pprint
 DBCooper_Mapping = {}
 
 
-def parse_input(input_dict):
+def parse_input(query, input_dict):
     """
     Parse the input string and return a list of tuples.
     """
@@ -43,8 +44,8 @@ def parse_input(input_dict):
         "join_tables": parse_join_tables
     }
 
-    query = input_dict['query']
-
+    if query in query_store:
+        raise Exception("Provided query is invalid")
     return query_store[query](input_dict)
 
 
@@ -53,7 +54,6 @@ def parse_create_database(input_dict):
     Parse the input list and return a database object.
     example input list: Create a database
     {
-        query: "create_database",
         database_name: "database_name"
     }
     """
@@ -63,14 +63,13 @@ def parse_create_database(input_dict):
         DBCooper_Mapping[input_dict['database_name']] = CooperDB(input_dict['database_name'])
         return DBCooper_Mapping[input_dict['database_name']]
 
-
-def parse_create_table(input_dict, database):
+def parse_create_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Create a table in the database
     {
-        query: "create_table",
-        table_name: "table_name",
+        databse_name: "databse_name",
+        "table_name": "table_name",
         columns: [
             {
                 name: "name",
@@ -86,6 +85,7 @@ def parse_create_table(input_dict, database):
     """
 
     table_columns = []
+    database = input_dict["database_name"]
 
     for table_column in input_dict['columns']:
         try:
@@ -126,18 +126,20 @@ def parse_create_table(input_dict, database):
         )
         return database.database.tables
 
-def parse_insert_into_table(input_dict, database:CooperDB):
+def parse_insert_into_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Insert into table
     {
-        query: "insert_into_table",
+        databse_name: "databse_name",
         table_name: "table_name",
         data: {
             <column>: "<data>"
         }   
     }
     """
+    database = input_dict["database_name"]
+
     if input_dict['table_name'] not in database.tables:
         raise Exception("Table does not exist")
     else:
@@ -164,24 +166,24 @@ def parse_delete_database(input_dict):
     DBCooper_Mapping.pop(database)
     return database
 
-def parse_delete_all_from_table(input_dict, database):
+def parse_delete_all_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Delete all from table
     {
-        query: "delete_all_from_table",
+        databse_name: "databse_name",
         table_name: "table_name"
     }
     """
 
     pass
 
-def parse_delete_row_from_table(input_dict, database):
+def parse_delete_row_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Delete row from table
     {
-        query: "delete_row_from_table",
+        databse_name: "databse_name",
         table_name: "table_name",
         data: {
             <column>: "<data>",
@@ -190,23 +192,23 @@ def parse_delete_row_from_table(input_dict, database):
     """
     pass
 
-def parse_delete_all_from_database(input_dict, database):
+def parse_delete_all_from_database(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Delete all from database
     {
-        query: "delete_all_from_database",
+        databse_name: "databse_name",
         database_name: "database_name"
     }
     """
     pass
 
-def parse_update_table(input_dict, database):
+def parse_update_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Update table
     {
-        query: "update_table",
+        databse_name: "databse_name",
         table_name: "table_name",
         data: {
             <column>: "<data>"
@@ -215,12 +217,12 @@ def parse_update_table(input_dict, database):
     """
     pass
 
-def parse_get_value(input_dict, database):
+def parse_get_value(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Get value
     {
-        query: "get_value",
+        databse_name: "databse_name",
         table_name: "table_name",
         column_name: "column_name",
         value: "<data>"
@@ -228,34 +230,34 @@ def parse_get_value(input_dict, database):
     """
     pass
 
-def parse_get_all_from_table(input_dict, database):
+def parse_get_all_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Get all from table
     {
-        query: "get_all_from_table",
+        databse_name: "databse_name",
         table_name: "table_name"
     }
     """
     pass
 
-def parse_get_all_from_database(input_dict, database):
+def parse_get_all_from_database(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Get all from database
     {
-        query: "get_all_from_database",
+        databse_name: "databse_name"",
         database_name: "database_name"
     }
     """
     pass
 
-def parse_join_tables(input_dict, database):
+def parse_join_tables(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Join tables
     {
-        query: "join_tables",
+        databse_name: "databse_name",
         table_name: "table_name",
         join_table_name: "join_table_name",
         join_column_name: "join_column_name",
@@ -265,10 +267,8 @@ def parse_join_tables(input_dict, database):
     pass
 
 
-parse_create_database({"query": "create_database",
-        "database_name": "database_name"})
-parse_create_table({"query": "create_table",
-                    "name": "table_name",
+parse_create_database({"database_name": "database_name"})
+parse_create_table({"name": "table_name",
                     "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]
                     }
                 , DBCooper_Mapping["database_name"])

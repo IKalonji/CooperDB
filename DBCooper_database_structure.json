@@ -19,7 +19,7 @@
                     }
                 }
             ],
-            "data": 
+            "rows": 
             [
                 {"TestColumn": "TestValue"}
             ],
