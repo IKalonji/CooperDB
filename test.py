@@ -15,7 +15,9 @@ def main():
         "query": ""
     })"""
 
-    print(db.database);
+    print(db.database)
+    print("\n")
+    print(DBCooper_Mapping)
 
 
 main()
