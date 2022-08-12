@@ -15,7 +15,12 @@ def main():
         "query": ""
     })"""
 
-    print(db.database)
+    print("\n")
+    print(DBCooper_Mapping["mydb"].database.tables)
+    parse_input({
+        "query": "delete_database",
+        "database_name": "database_name"
+    })
     print("\n")
     print(DBCooper_Mapping)
 

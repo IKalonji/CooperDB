@@ -48,7 +48,6 @@ def parse_input(input_dict):
     return query_store[query](input_dict)
 
 
-
 def parse_create_database(input_dict):
     """
     Parse the input list and return a database object.
@@ -64,19 +63,20 @@ def parse_create_database(input_dict):
         DBCooper_Mapping[input_dict['database_name']] = CooperDB(input_dict['database_name'])
         return DBCooper_Mapping[input_dict['database_name']]
 
+
 def parse_create_table(input_dict, database):
     """
     Parse the input list and return a table object.
     example input dict: Create a table in the database
     {
         query: "create_table",
-        "table_name": "table_name",
+        table_name: "table_name",
         columns: [
             {
                 name: "name",
-                type: "string"
-                primary_key: true
-                unique: true
+                type: "string",
+                primary_key: true,
+                unique: true,
                 foreign_key: {
                     table: "address",
                     column: "id"
@@ -158,13 +158,11 @@ def parse_delete_database(input_dict):
         database_name: "database_name"
     }
     """
-
     database = input_dict["database_name"]
     if database not in DBCooper_Mapping:
         raise Exception("Database does not exists")
-    DBCooper_Mapping.pop()
-
-    pass
+    DBCooper_Mapping.pop(database)
+    return database
 
 def parse_delete_all_from_table(input_dict, database):
     """
@@ -211,7 +209,7 @@ def parse_update_table(input_dict, database):
         query: "update_table",
         table_name: "table_name",
         data: {
-            <column>: "<data>",
+            <column>: "<data>"
         }
     }
     """
