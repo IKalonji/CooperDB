@@ -114,17 +114,17 @@ def parse_create_table(input_dict):
             raise Exception("Missing key: {}".format(e))
 
 
-    if input_dict['name'] in database.database.tables:
+    if input_dict['name'] in DBCooper_Mapping[database].database.tables:
         raise Exception("Table already exists")
     else:
-        database.create_table(
+        DBCooper_Mapping[database].create_table(
             Table(
                 name=input_dict['name'],
                 columns=table_columns,
-                row=[]
+                rows=[]
             )
         )
-        return database.database.tables
+        return DBCooper_Mapping[database].database.tables
 
 def parse_insert_into_table(input_dict):
     """
@@ -289,7 +289,9 @@ def ColumnExists(database_name, table_name, column_name):
 
 
 parse_create_database({"database_name": "database_name"})
-parse_create_table({"name": "table_name", "database_name": "database_name", "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]})
+parse_create_table({"database_name": "database_name", "name": "table_name",
+                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]
+                    })
 
 print(TableExists("database_name", "jdfjgfd"))
 print(DBCooper_Mapping)
