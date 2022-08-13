@@ -13,7 +13,7 @@ class Database:
 class Table:
     name: str
     columns: list
-    row: list
+    rows: list
 
 @dataclass
 class ForeignKey:
