@@ -17,6 +17,8 @@ DB-Cupa Domain specific language:
 
 from ast import Raise
 import dataclasses
+from itertools import count
+from msilib.sequence import tables
 import re
 from DBCooper import CooperDB
 from DBCooper_Dataclasses import Database, Table, Column, ForeignKey, Attribute
@@ -68,7 +70,7 @@ def parse_create_table(input_dict):
     Parse the input list and return a table object.
     example input dict: Create a table in the database
     {
-        databse_name: "databse_name",
+        databse_name: "database_name",
         "table_name": "table_name",
         columns: [
             {
@@ -131,32 +133,29 @@ def parse_insert_into_table(input_dict):
     Parse the input list and return a table object.
     example input dict: Insert into table
     {
-        databse_name: "databse_name",
+        databse_name: "database_name",
         table_name: "table_name",
         data: {
             <column>: "<data>"
         }   
     }
     """
-    database = input_dict["database_name"]
-
-    if input_dict['table_name'] not in database.tables:
-        raise Exception("Table does not exist")
-    else:
-        #Check if all columns are in the table and if all the data columns correspond to the columns in the table
-        for column in input_dict['data']:
-            if column not in database.tables[input_dict['table_name']].columns:
-                raise Exception("Column does not exist") 
-        table = database.tables[input_dict['table_name']]
-        table.insert_row(input_dict['data'])
-        return table
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    rows = input_dict['data']
+    for row in rows:
+        if ColumnExists(database_name, table_name, row):
+            tables = DBCooper_Mapping[database_name].database.tables
+            for table in tables:
+                if table.name == table_name:
+                    table.rows.append(rows)
+                    return table
 
 def parse_delete_database(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Delete database
     {
-        query: "delete_database",
         database_name: "database_name"
     }
     """
@@ -171,46 +170,74 @@ def parse_delete_all_from_table(input_dict):
     Parse the input list and return a table object.
     example input dict: Delete all from table
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name"
     }
     """
-    database = input_dict["database_name"]
-    #if database in 
-    table = input_dict["table_name"]
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    if TableExists(database_name, table_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        for table in tables:
+            if table.name == table_name:
+                table.rows = []
+                return table
 
 def parse_delete_row_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Delete row from table
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name",
         data: {
             <column>: "<data>",
         }
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    row = input_dict["data"]
+    column_name = list(row.keys())[0]
+    column_value = row[column_name]
+
+    if ColumnExists(database_name, table_name, column_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        for table in tables:
+            if table.name == table_name:
+                rows = table.rows
+                count = 0
+                for row in rows:
+                    count += 1
+                    if row[column_name] == column_value:
+                        rows.remove(row)
+                        if count == len(rows):
+                            return table
 
 def parse_delete_all_from_database(input_dict):
     """
-    Parse the input list and return a table object.
+    Parse the input list and return a table list object.
     example input list: Delete all from database
     {
-        databse_name: "databse_name",
         database_name: "database_name"
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    if DatabaseExists(database_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        count = 0
+        for table in tables:
+            count += 1
+            table.rows = []
+            if count == len(tables):
+                return tables
 
 def parse_update_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Update table
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name",
         data: {
             <column>: "<data>"
@@ -224,7 +251,7 @@ def parse_get_value(input_dict):
     Parse the input list and return a table object.
     example input list: Get value
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name",
         column_name: "column_name",
         value: "<data>"
@@ -237,7 +264,7 @@ def parse_get_all_from_table(input_dict):
     Parse the input list and return a table object.
     example input list: Get all from table
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name"
     }
     """
@@ -245,10 +272,9 @@ def parse_get_all_from_table(input_dict):
 
 def parse_get_all_from_database(input_dict):
     """
-    Parse the input list and return a table object.
+    Parse the input list and return a table list object.
     example input list: Get all from database
     {
-        databse_name: "databse_name"",
         database_name: "database_name"
     }
     """
@@ -259,7 +285,7 @@ def parse_join_tables(input_dict):
     Parse the input list and return a table object.
     example input list: Join tables
     {
-        databse_name: "databse_name",
+        database_name: "database_name",
         table_name: "table_name",
         join_table_name: "join_table_name",
         join_column_name: "join_column_name",
@@ -275,25 +301,92 @@ def DatabaseExists(database_name):
 
 def TableExists(database_name, table_name):
     DatabaseExists(database_name)
-    if table_name not in DBCooper_Mapping[database_name].database.tables:
-        raise Exception("Table '{}' does not exist".format(table_name))
-    return True
+    for table in DBCooper_Mapping[database_name].database.tables:
+        if table.name == table_name:
+            return True
+    raise Exception("Table '{}' does not exist".format(table_name))
 
 def ColumnExists(database_name, table_name, column_name):
     TableExists(database_name, table_name)
-    if column_name not in DBCooper_Mapping[database_name].database.tables[table_name].culumns:
-        raise Exception("Culumn ''{} does not exist".format(column_name))
-    return True
+    tables = DBCooper_Mapping[database_name].database.tables
+    for table in tables:
+        if table.name == table_name:
+            for column in table.columns:
+                if column_name == column.name:
+                    return True
+    raise Exception("Column '{}' does not exist".format(column_name))
 
 
 
 
 parse_create_database({"database_name": "database_name"})
 parse_create_table({"database_name": "database_name", "name": "table_name",
-                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } }]
+                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } },
+                    { "name": "surname", "type": "string", "primary_key": False, "unique": False, "foreign_key": { "table": "address", "column": "id" } }]
                     })
 
-print(TableExists("database_name", "jdfjgfd"))
-print(DBCooper_Mapping)
+parse_create_table({"database_name": "database_name", "name": "table_name2",
+                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } },
+                    { "name": "surname", "type": "string", "primary_key": False, "unique": False, "foreign_key": { "table": "address", "column": "id" } }]
+                    })
+
+print(DBCooper_Mapping["database_name"].database)
+
+"""parse_delete_all_from_table({
+        "database_name": "database_name",
+        "table_name": "table_name"
+    })"""
+
+parse_insert_into_table({
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "data": {
+            "name": "myname",
+            "surname": "mysurname"
+        }
+    })
+
+parse_insert_into_table({
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "data": {
+            "name": "myname2",
+            "surname": "mysurname2"
+        }
+    })
+
+parse_insert_into_table({
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "data": {
+            "name": "myname",
+            "surname": "mysurname2"
+        }
+    })
+
+parse_insert_into_table({
+        "database_name": "database_name",
+        "table_name": "table_name2",
+        "data": {
+            "name": "myname3",
+            "surname": "mysurname3"
+        }
+    })
+
+print(DBCooper_Mapping["database_name"].database)
+
+parse_delete_row_from_table({
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "data": {
+            "name": "myname",
+        }
+    })
+
+parse_delete_all_from_database({
+        "database_name": "database_name"
+    })
+
+print(DBCooper_Mapping["database_name"].database)
 
 """pprint(dataclasses.asdict(DBCooper_Mapping['database_name'].database))"""
