@@ -211,7 +211,7 @@ def parse_delete_row_from_table(input_dict):
                     count += 1
                     if row[column_name] == column_value:
                         rows.remove(row)
-                        if count == len(rows):
+                        if count >= len(rows):
                             return table
 
 def parse_delete_all_from_database(input_dict):
@@ -229,7 +229,7 @@ def parse_delete_all_from_database(input_dict):
         for table in tables:
             count += 1
             table.rows = []
-            if count == len(tables):
+            if count >= len(tables):
                 return tables
 
 def parse_update_table(input_dict):
@@ -239,12 +239,44 @@ def parse_update_table(input_dict):
     {
         database_name: "database_name",
         table_name: "table_name",
-        data: {
-            <column>: "<data>"
+        search_data: {
+            column_name: "<data>",
+            column_name: "<data>",
+            ...
+        }
+        update_data: {
+            column_name: "<data>",
+            column_name: "<data>",
+            ...
         }
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    search_data = input_dict["search_data"]
+    update_data = input_dict["update_data"]
+    for column_name in search_data.keys():
+        ColumnExists(database_name, table_name, column_name)
+        
+    for column_name in update_data.keys():
+        ColumnExists(database_name, table_name, column_name)
+    
+    tables = DBCooper_Mapping[database_name].database.tables
+    for table in tables:
+        if table.name == table_name:
+            rows = table.rows
+            row_count = 0
+            for row in rows:
+                row_count += 1
+                count = 0
+                for search_column in search_data.keys():
+                    if row[search_column] == search_data[search_column]:
+                        count += 1
+                    if count >= len(search_data.keys()):
+                        for update_column in update_data.keys():
+                            row[update_column] = update_data[update_column]
+                if row_count >= len(rows):
+                    return table
 
 def parse_get_value(input_dict):
     """
@@ -254,10 +286,23 @@ def parse_get_value(input_dict):
         database_name: "database_name",
         table_name: "table_name",
         column_name: "column_name",
-        value: "<data>"
+        column_value: "<data>"
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    column_name = input_dict["column_name"]
+    column_value = input_dict["column_value"]
+    values = []
+    if ColumnExists(database_name, table_name, column_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        for table in tables:
+            if table.name == table_name:
+                rows = table.rows
+                for row in rows:
+                    if row[column_name] == column_value:
+                        values.append(row)
+    return values
 
 def parse_get_all_from_table(input_dict):
     """
@@ -268,7 +313,15 @@ def parse_get_all_from_table(input_dict):
         table_name: "table_name"
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    values = []
+    if TableExists(database_name, table_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        for table in tables:
+            if table.name == table_name:
+                values = table.rows
+    return values
 
 def parse_get_all_from_database(input_dict):
     """
@@ -278,7 +331,13 @@ def parse_get_all_from_database(input_dict):
         database_name: "database_name"
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    values = []
+    if DatabaseExists(database_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        for table in tables:
+            values.append({ "table_name" : table.name, "rows": table.rows })
+    return values
 
 def parse_join_tables(input_dict):
     """
@@ -330,7 +389,7 @@ parse_create_table({"database_name": "database_name", "name": "table_name2",
                     { "name": "surname", "type": "string", "primary_key": False, "unique": False, "foreign_key": { "table": "address", "column": "id" } }]
                     })
 
-print(DBCooper_Mapping["database_name"].database)
+#print(DBCooper_Mapping["database_name"].database)
 
 """parse_delete_all_from_table({
         "database_name": "database_name",
@@ -373,9 +432,9 @@ parse_insert_into_table({
         }
     })
 
-print(DBCooper_Mapping["database_name"].database)
+#print(DBCooper_Mapping["database_name"].database)
 
-parse_delete_row_from_table({
+"""parse_delete_row_from_table({
         "database_name": "database_name",
         "table_name": "table_name",
         "data": {
@@ -386,7 +445,34 @@ parse_delete_row_from_table({
 parse_delete_all_from_database({
         "database_name": "database_name"
     })
+value = parse_get_value({
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "column_name": "name",
+        "column_value": "myname"
+    })
+"""
 
-print(DBCooper_Mapping["database_name"].database)
+value = parse_get_all_from_database({
+        "database_name": "database_name",
+        "table_name": "table_name"
+    })
+
+print(value)
+
+tbl = parse_update_table({ 
+        "database_name": "database_name",
+        "table_name": "table_name",
+        "search_data": {
+            "name": "myname"
+        },
+        "update_data": {
+            "name": "myname5",
+            "surname": "mysurname5"
+        }
+    })
+
+print(tbl)
+#print(DBCooper_Mapping["database_name"].database)
 
 """pprint(dataclasses.asdict(DBCooper_Mapping['database_name'].database))"""
