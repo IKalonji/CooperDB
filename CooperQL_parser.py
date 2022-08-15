@@ -351,7 +351,10 @@ def parse_join_tables(input_dict):
         join_type: "inner"
     }
     """
-    database_name = input_dict["database_name"]
+    try:
+        database_name = input_dict["database_name"]
+    except KeyError as error:
+        raise KeyError("Database name is required") from error
     table_name = input_dict["table_name"]
     join_table_name = input_dict["join_table_name"]
     join_column_name = input_dict["join_column_name"]
