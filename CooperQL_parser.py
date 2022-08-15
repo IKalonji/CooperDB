@@ -351,7 +351,67 @@ def parse_join_tables(input_dict):
         join_type: "inner"
     }
     """
-    pass
+    database_name = input_dict["database_name"]
+    table_name = input_dict["table_name"]
+    join_table_name = input_dict["join_table_name"]
+    join_column_name = input_dict["join_column_name"]
+    join_type = input_dict["join_type"]
+    if TableExists(database_name, table_name) and TableExists(database_name, join_table_name):
+        tables = DBCooper_Mapping[database_name].database.tables
+        base_table_rows = []
+        join_table_rows = []
+        join_result = []
+        for table in tables:
+            if table.name == table_name:
+                base_table_rows = table.rows
+        for table in tables:
+            if table.name == join_table_name:
+                join_table_rows = table.rows
+        if join_type == "inner":
+            for base_table_row in base_table_rows:
+                for join_table_row in join_table_rows:
+                    if base_table_row[join_column_name] == join_table_row[join_column_name]:
+                        joined_row = base_table_row.copy()
+                        joined_row.update(join_table_row)
+                        join_result.append(joined_row)
+            return join_result
+        elif join_type == "left":
+            for base_table_row in base_table_rows:
+                for join_table_row in join_table_rows:
+                    if base_table_row[join_column_name] == join_table_row[join_column_name]:
+                        joined_row = base_table_row.copy()
+                        joined_row.update(join_table_row)
+                        join_result.append(joined_row)
+            for join_table_row in join_table_rows:
+                if join_table_row[join_column_name] not in [row[join_column_name] for row in join_result]:
+                    join_result.append(join_table_row)
+            return join_result
+        elif join_type == "right":
+            for join_table_row in join_table_rows:
+                for base_table_row in base_table_rows:
+                    if base_table_row[join_column_name] == join_table_row[join_column_name]:
+                        joined_row = base_table_row.copy()
+                        joined_row.update(join_table_row)
+                        join_result.append(joined_row)
+            for base_table_row in base_table_rows:
+                if base_table_row[join_column_name] not in [row[join_column_name] for row in join_result]:
+                    join_result.append(base_table_row)
+            return join_result
+        elif join_type == "outer":
+            for base_table_row in base_table_rows:
+                for join_table_row in join_table_rows:
+                    if base_table_row[join_column_name] == join_table_row[join_column_name]:
+                        joined_row = base_table_row.copy()
+                        joined_row.update(join_table_row)
+                        join_result.append(joined_row)
+            for join_table_row in join_table_rows:
+                if join_table_row[join_column_name] not in [row[join_column_name] for row in join_result]:
+                    join_result.append(join_table_row)
+            for base_table_row in base_table_rows:
+                if base_table_row[join_column_name] not in [row[join_column_name] for row in join_result]:
+                    join_result.append(base_table_row)
+            return join_result
+    return None
 
 def DatabaseExists(database_name):
     if database_name not in DBCooper_Mapping:
