@@ -23,6 +23,7 @@ import re
 from DBCooper import CooperDB
 from DBCooper_Dataclasses import Database, Table, Column, ForeignKey, Attribute
 from pprint import pprint
+from terminaltables import AsciiTable, SingleTable, DoubleTable
 
 DBCooper_Mapping = {}
 
@@ -46,7 +47,7 @@ def parse_input(query, input_dict):
         "join_tables": parse_join_tables
     }
 
-    if query not in query_store:
+    if query not in query_store.keys():
         raise Exception("Provided query is invalid")
     return query_store[query](input_dict)
 
@@ -275,6 +276,7 @@ def parse_update_table(input_dict):
                     if count >= len(search_data.keys()):
                         for update_column in update_data.keys():
                             row[update_column] = update_data[update_column]
+                            DBCooper_Mapping[database_name].db_commit()
                 if row_count >= len(rows):
                     return table
 
@@ -438,104 +440,3 @@ def ColumnExists(database_name, table_name, column_name):
                     return True
     raise Exception("Column '{}' does not exist".format(column_name))
 
-
-
-
-parse_create_database({"database_name": "database_name"})
-parse_create_table({"database_name": "database_name", "name": "table_name",
-                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } },
-                    { "name": "surname", "type": "string", "primary_key": False, "unique": False, "foreign_key": { "table": "address", "column": "id" } }]
-                    })
-
-parse_create_table({"database_name": "database_name", "name": "table_name2",
-                    "columns": [{ "name": "name", "type": "string", "primary_key": True, "unique": True, "foreign_key": { "table": "address", "column": "id" } },
-                    { "name": "surname", "type": "string", "primary_key": False, "unique": False, "foreign_key": { "table": "address", "column": "id" } }]
-                    })
-
-#print(DBCooper_Mapping["database_name"].database)
-
-"""parse_delete_all_from_table({
-        "database_name": "database_name",
-        "table_name": "table_name"
-    })"""
-
-parse_insert_into_table({
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "data": {
-            "name": "myname",
-            "surname": "mysurname"
-        }
-    })
-
-parse_insert_into_table({
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "data": {
-            "name": "myname2",
-            "surname": "mysurname2"
-        }
-    })
-
-parse_insert_into_table({
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "data": {
-            "name": "myname",
-            "surname": "mysurname2"
-        }
-    })
-
-parse_insert_into_table({
-        "database_name": "database_name",
-        "table_name": "table_name2",
-        "data": {
-            "name": "myname3",
-            "surname": "mysurname3"
-        }
-    })
-
-#print(DBCooper_Mapping["database_name"].database)
-
-"""parse_delete_row_from_table({
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "data": {
-            "name": "myname",
-        }
-    })
-
-parse_delete_all_from_database({
-        "database_name": "database_name"
-    })
-value = parse_get_value({
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "column_name": "name",
-        "column_value": "myname"
-    })
-"""
-
-value = parse_get_all_from_database({
-        "database_name": "database_name",
-        "table_name": "table_name"
-    })
-
-print(value)
-
-tbl = parse_update_table({ 
-        "database_name": "database_name",
-        "table_name": "table_name",
-        "search_data": {
-            "name": "myname"
-        },
-        "update_data": {
-            "name": "myname5",
-            "surname": "mysurname5"
-        }
-    })
-
-print(tbl)
-#print(DBCooper_Mapping["database_name"].database)
-
-"""pprint(dataclasses.asdict(DBCooper_Mapping['database_name'].database))"""
