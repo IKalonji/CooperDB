@@ -24,7 +24,7 @@
     <a href="https://github.com/IKalonji/CooperDB/blob/main/README.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://youtu.be/hkJ0wgO6Hc4">View Demo</a>
+    <a href="https://youtu.be/mmEXSMz2a9o">View Demo</a>
     ·
     <a href="https://github.com/IKalonji/CooperDB/issues">Report Bug</a>
     ·
