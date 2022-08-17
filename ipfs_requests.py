@@ -5,8 +5,8 @@ import dataclasses
 import subprocess
 
 
-API_KEY = "3d59cd80-9957-4423-8d5e-974bc98af2c0_100"
-URL = "KEY_HERE"
+API_KEY = "KEY_HERE"
+URL = "https://api-eu1.tatum.io/v3/ipfs"
 
 def commit_db(db):
     """Commit the database to IPFS"""

@@ -1,1 +1,84 @@
-{"name": "cooperdb_demo", "tables": [{"name": "clients", "columns": [{"name": "name", "type": "string", "attributes": {"primary_key": true, "unique": true, "foreign_key": {"reference_table": "address", "reference_column": "id"}}}, {"name": "surname", "type": "string", "attributes": {"primary_key": false, "unique": false, "foreign_key": {"reference_table": "address", "reference_column": "id"}}}], "rows": [{"name": "issa", "surname": "winner"}, {"name": "fil", "surname": "coin"}]}, {"name": "addresses", "columns": [{"name": "name", "type": "string", "attributes": {"primary_key": true, "unique": true, "foreign_key": {"reference_table": "clients", "reference_column": "name"}}}, {"name": "address", "type": "string", "attributes": {"primary_key": false, "unique": true, "foreign_key": {"reference_table": "", "reference_column": ""}}}], "rows": [{"name": "issa", "address": "0x123"}, {"name": "fil", "address": "0x456"}]}], "cid": "bafkreialctqpfpvvnltoaysu3qzyn5clehh2ah535mxphnrxcwcglgo5ee"}
+{
+    "name": "cooperdb_demo",
+    "tables": [
+        {
+            "name": "clients",
+            "columns": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "attributes": {
+                        "primary_key": true,
+                        "unique": true,
+                        "foreign_key": {
+                            "reference_table": "address",
+                            "reference_column": "id"
+                        }
+                    }
+                },
+                {
+                    "name": "surname",
+                    "type": "string",
+                    "attributes": {
+                        "primary_key": false,
+                        "unique": false,
+                        "foreign_key": {
+                            "reference_table": "address",
+                            "reference_column": "id"
+                        }
+                    }
+                }
+            ],
+            "rows": [
+                {
+                    "name": "issa",
+                    "surname": "winner"
+                },
+                {
+                    "name": "fil",
+                    "surname": "coin"
+                }
+            ]
+        },
+        {
+            "name": "addresses",
+            "columns": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "attributes": {
+                        "primary_key": true,
+                        "unique": true,
+                        "foreign_key": {
+                            "reference_table": "clients",
+                            "reference_column": "name"
+                        }
+                    }
+                },
+                {
+                    "name": "address",
+                    "type": "string",
+                    "attributes": {
+                        "primary_key": false,
+                        "unique": true,
+                        "foreign_key": {
+                            "reference_table": "",
+                            "reference_column": ""
+                        }
+                    }
+                }
+            ],
+            "rows": [
+                {
+                    "name": "issa",
+                    "address": "0x123"
+                },
+                {
+                    "name": "fil",
+                    "address": "0x456"
+                }
+            ]
+        }
+    ],
+    "cid": "bafkreiaqkrgxls6pbuhj5c72nahxg2bvx6b4ysjih2kwint6pckrtaoeg4"
+}

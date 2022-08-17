@@ -43,7 +43,7 @@ the web3 space which results in may developers using the traditional web2 databa
 
 ## Demo Video
 
-[Youtube]()
+[![DEMO](https://img.youtube.com/vi/mmEXSMz2a9o/0.jpg)](https://youtu.be/mmEXSMz2a9o)
 
 ## How it works
 
