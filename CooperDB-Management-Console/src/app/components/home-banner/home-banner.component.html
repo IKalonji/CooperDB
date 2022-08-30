@@ -1,0 +1,46 @@
+<div class="div-padding">
+    <div class="heading-spacer"></div>
+    <p>Decentralized Relational Database Management as a Service</p>
+    <p>built on IPFS, Chainlink and Polygon.</p> 
+    <p> Making your data management</p>
+    <p>seamless and efficient</p>
+    <div class="heading-spacer"></div>
+    <div class="sponsor-cards">
+        <label>Built with</label>
+        <span class="cards-span">
+            <app-sponsor-card *ngFor="let sponsor of sponsors" [name]="sponsor.name" [logo]="sponsor.logo"></app-sponsor-card>
+        </span>
+    </div>
+</div>
+
+<style>
+    .heading{
+        font-weight: 800;
+        font-size: 60px;
+    }
+    .div-padding{
+        padding: 10px;
+    }
+    .heading-spacer{
+        height: 60px;
+    }
+    p{
+        font-weight: 400;
+        font-size: 40px;
+        padding: 5px;
+        color: grey;
+    }
+    .sponsor-cards{
+        text-align: center;
+    }
+    .cards-span{
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-grow: grow;
+    }
+    label{
+        font-weight: 600;
+        font-size: 20px;
+    }
+</style>
