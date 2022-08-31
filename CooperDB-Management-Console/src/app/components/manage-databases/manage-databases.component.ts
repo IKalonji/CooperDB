@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CooperDbService } from 'src/app/services/cooper-db.service';
 
 @Component({
   selector: 'app-manage-databases',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageDatabasesComponent implements OnInit {
 
-  constructor() { }
+  selected:string = ""
+
+  databases: string[] = []
+
+  displayDB: any;
+
+  constructor(private databaseService: CooperDbService) { }
 
   ngOnInit(): void {
+    this.databases = this.databaseService.getDatabases()
+  }
+
+  showDB(){
+    this.displayDB = this.databaseService.getDatabase(this.selected)
   }
 
 }

@@ -1,1 +1,37 @@
-<p>manage-databases works!</p>
+<div class="selector">
+    <mat-form-field appearance="fill">
+        <mat-label>Select a Database</mat-label>
+        <mat-select [(value)]="selected">
+          <mat-option *ngFor="let database of databases" value="database">{{database}}</mat-option>
+          <mat-option *ngIf="databases.length == 0" value="none">No database available</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button (click)="showDB()">Open Database</button>
+</div>
+<div class="separator"></div>
+<div *ngIf="displayDB">
+    <div  *ngFor="let table of displayDB.tables">
+        <mat-card class="table-cards">
+            <mat-card-title>Table: {{table.name}}</mat-card-title>
+            <mat-card-content>
+                <label>Columns</label>
+                <p *ngFor="let column of table.columns">{{column}}</p>
+              </mat-card-content>
+        </mat-card>
+        <div class="separator"></div>
+    </div>
+   
+</div>
+
+<style>
+    .selector{
+        padding: 10px;
+        text-align: center;
+    }
+    .separator{
+        height: 10px;
+    }
+    .table-cards{
+        width: 300px;
+    }
+</style>

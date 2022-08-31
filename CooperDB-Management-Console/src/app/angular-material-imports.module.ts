@@ -5,6 +5,9 @@ import { MatCardModule } from '@angular/material/card'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatButtonModule} from '@angular/material/button'
+import { MatInputModule } from '@angular/material/input'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -15,7 +18,10 @@ import { MatButtonModule} from '@angular/material/button'
     MatCardModule,
     MatSidenavModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule
   ]
 })
 export class AngularMaterialImportsModule { }

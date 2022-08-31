@@ -12,30 +12,23 @@ import { ConsoleViewDirective } from 'src/app/directives/console-view.directive'
 })
 export class ConsoleComponent implements OnInit {
 
-  @ViewChild(ConsoleViewDirective, {static: true}) appConsoleView !: ConsoleViewDirective;
+  selectorComponent: string = "managedb"
 
-  constructor(private router: Router,
-    private componentFactory: ComponentFactoryResolver) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
   myDB(){
-    this.loadComponent(DatabasesComponent)
+    this.selectorComponent = "mydb"
   }
 
   manageDB(){
-    this.loadComponent(ManageDatabasesComponent)
+    this.selectorComponent = "managedb"
   }
 
   manageSubscription(){
-    this.loadComponent(ManageSubscriptionComponent)
-  }
-
-  loadComponent(component:any){
-
-    this.appConsoleView.viewContainerRef.createComponent(component)
-
+    this.selectorComponent = "managesubscription"
   }
 
 }

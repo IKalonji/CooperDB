@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; 
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +16,7 @@ import { DatabasesComponent } from './components/databases/databases.component';
 import { ManageDatabasesComponent } from './components/manage-databases/manage-databases.component';
 import { ManageSubscriptionComponent } from './components/manage-subscription/manage-subscription.component';
 import { ConsoleViewDirective } from './directives/console-view.directive';
+import { ConsoleMainViewSelectorComponent } from './components/console-main-view-selector/console-main-view-selector.component';
 
 
 
@@ -31,12 +33,14 @@ import { ConsoleViewDirective } from './directives/console-view.directive';
     ManageDatabasesComponent,
     ManageSubscriptionComponent,
     ConsoleViewDirective,
+    ConsoleMainViewSelectorComponent,
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
     AngularMaterialImportsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -13,7 +13,7 @@
           </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <ng-template appConsoleView></ng-template>
+        <app-console-main-view-selector [component]="selectorComponent"></app-console-main-view-selector>
     </mat-sidenav-content>
 </mat-sidenav-container>
 
@@ -22,7 +22,7 @@
         position: absolute;
         height: 100%;
         width: 100%;
-        background: #eee;
+        /* background: #eee; */
     }
     .nav{
         width: 300px;

@@ -1,1 +1,32 @@
-<p>databases works!</p>
+<div class="root">
+    <div class="header">
+        <h1>My Databases</h1>
+        <label *ngIf="databases.length == 0">You do not have any databases, create a new database below</label>
+    </div>
+    <div *ngFor="let database of databases">
+        <mat-card>{{database}}</mat-card>
+        <div class="card-spacer"></div>
+    </div>
+    
+    <mat-card>
+        <h2>Create DB</h2>
+        <mat-form-field>
+            <mat-label>Database name</mat-label>
+            <input matInput type="text" [(ngModel)]="newDB">
+        </mat-form-field>
+        <button mat-button (click)="addDBs()">Create Database</button>
+    </mat-card>
+</div>
+
+<style>
+    .root{
+        height: 100%
+    }
+    .header{
+        padding: 5px;
+        text-align: center;
+    }
+    .card-spacer{
+        height: 5px;
+    }
+</style>
