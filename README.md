@@ -47,16 +47,7 @@ the web3 space which results in may developers using the traditional web2 databa
 
 ## How it works
 
-```mermaid
-flowchart TD
-    A[APP] --> B[APPLICATION API]
-    B --> C[Cooper Query Language Parser]
-    C --> D[DB manipulation]
-    D -- Commit --> E[IPFS Storage Layer]
-    E -- Load DB Instance --> D
-    D --> C
-    B -- Return Values --> A
-```
+![Diagram](./diagram.png)
 
 We are working on creating a subset of SQL called CooperQL which will act as a Domain Specific Language for the CooperDB frame work. After every request which changes the state of
 the data loaded from IPFS a new commit is done and the CID is updated.
@@ -89,6 +80,14 @@ Example request to create a table (Code is well documents, please browse through
 }
 ```
 
+## Built with:
+
+* Python
+* Angular
+* Chainlink
+* Polygon
+* Solidity
+
 ## Future developments
 
 * Data encryption
@@ -99,7 +98,7 @@ Example request to create a table (Code is well documents, please browse through
 
 ## Challenges faced
 
-Mainly, creating a Lexer for parsing requests.
+Mainly, creating a Lexer for parsing requests and implementing a Keeper for subscriptions.
 
 ## Running the project
 
@@ -121,7 +120,8 @@ git clone https://github.com/IKalonji/CooperDB.git
 ## Acknowledgements
 
 * IPFS/Filecoin
-* Devpost
+* Encode Club
+* Chainlink
 
 ## Licenses
 
