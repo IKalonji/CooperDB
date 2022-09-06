@@ -1,0 +1,165 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{heading}}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <hr>
+
+    <div class="columns">
+        <mat-form-field class="attributes">
+            <mat-label>Table Name</mat-label>
+            <input matInput type="text" [(ngModel)]="table.name">
+        </mat-form-field>
+    </div>
+
+    <label>Columns</label>
+    <div class="separator"></div>
+    <div *ngFor="let column of table.columns">
+        <mat-card>
+            <mat-card-content>
+                <div class="columns">
+                    <mat-form-field class="attributes">
+                        <mat-label>Name</mat-label>
+                        <input matInput type="text" [(ngModel)]="column.name">
+                    </mat-form-field>
+                </div>
+                <div class="columns">
+                    <mat-form-field class="attributes">
+                        <mat-label>Type</mat-label>
+                        <mat-select [(ngModel)]="column.type">
+                            <mat-option *ngFor="let type of types" [value]="type">
+                                {{type}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <label>Attributes</label>
+                <div class="separator"></div>
+                <div class="columns">
+                    <div class="attributes">
+                        <mat-checkbox [(ngModel)]="column.attributes.primary_key">Primary Key</mat-checkbox>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="attributes">
+                        <mat-checkbox matInput type="text" [(ngModel)]="column.attributes.unique">Unique</mat-checkbox>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+                <label>Foreign Key</label>
+                <div class="separator"></div>
+                <div class="columns">
+                    <mat-form-field class="attributes">
+                        <mat-label>Reference Table</mat-label>
+                        <mat-select [(ngModel)]="column.attributes.foreign_key.table">
+                            <div *ngFor="let tableName of tableNames">
+                                <mat-option *ngIf="tableName != table.name" [value]="tableName">
+                                    {{tableName}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="columns">
+                    <mat-form-field class="attributes">
+                        <mat-label>Reference Column</mat-label>
+                        <mat-select [(ngModel)]="column.attributes.foreign_key.column">
+                            <mat-option *ngFor="let columnName of getColumnNames(column.attributes.foreign_key.table)" [value]="columnName">
+                                {{columnName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="separator"></div>
+                <div class="columns">
+                    <div class="attributes">
+                        <button mat-raised-button color="warn" (click)="removeColumn(column.name)">Remove Column</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="separator"></div>
+    </div>
+    <div class="separator"></div>
+    <div class="columns">
+        <div class="attributes">
+            <button mat-raised-button color="accent" (click)="createEmptyColumn()">Add Column</button>
+        </div>
+        <div class="attributes" *ngIf="!isNew">
+            <button mat-raised-button color="warn" (click)="removeTable(table.name)">Remove Table</button>
+        </div>
+        <div class="attributes">
+            <button mat-raised-button color="primary" *ngIf="!isNew" (click)="createUpdateTable()">Update Table</button>
+            <button mat-raised-button color="primary" *ngIf="isNew" (click)="createUpdateTable()">Create Table</button>
+        </div>
+    </div>
+</mat-expansion-panel>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+
+
+    .content {
+        margin: 10px;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .row::after {
+        content: "";
+        clear: both;
+    }
+
+    .col {
+        float: left;
+        width: 100%;
+    }
+    .selector{
+        text-align: left;
+    }
+    .separator{
+        height: 10px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .columns {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .attributes {
+        width: 100%;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .col {
+            width: 50%;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        } 
+    }
+    
+</style>

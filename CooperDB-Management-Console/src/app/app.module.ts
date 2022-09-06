@@ -1,6 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; 
+import { MatIconModule } from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,11 +19,12 @@ import { HomeBannerComponent } from './components/home-banner/home-banner.compon
 import { HowItWorksBannerComponent } from './components/how-it-works-banner/how-it-works-banner.component';
 import { SponsorCardComponent } from './components/sponsor-card/sponsor-card.component';
 import { AngularMaterialImportsModule } from './angular-material-imports.module';
-import { DatabasesComponent } from './components/databases/databases.component';
+import { ConfirmDeleteDialog, DatabasesComponent, RenameDatabaseDialog } from './components/databases/databases.component';
 import { ManageDatabasesComponent } from './components/manage-databases/manage-databases.component';
 import { ManageSubscriptionComponent } from './components/manage-subscription/manage-subscription.component';
 import { ConsoleViewDirective } from './directives/console-view.directive';
 import { ConsoleMainViewSelectorComponent } from './components/console-main-view-selector/console-main-view-selector.component';
+import { CreateUpdateTableComponent } from './components/create-update-table/create-update-table.component';
 
 
 
@@ -34,13 +42,23 @@ import { ConsoleMainViewSelectorComponent } from './components/console-main-view
     ManageSubscriptionComponent,
     ConsoleViewDirective,
     ConsoleMainViewSelectorComponent,
+    ConfirmDeleteDialog,
+    RenameDatabaseDialog,
+    CreateUpdateTableComponent
   ],
   imports: [
     AngularMaterialImportsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
-    FormsModule
+    FormsModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatExpansionModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
