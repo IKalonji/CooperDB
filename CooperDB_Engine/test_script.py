@@ -1,5 +1,5 @@
 from terminaltables import DoubleTable
-from CooperQL_parser import *
+from CooperDB_Parser.CooperQL_parser import *
 from pprint import pprint
 
 
@@ -23,10 +23,10 @@ def print_database(database):
     input("...continue...")
 
 
-database = parse_create_database({"database_name": "cooperDB_demo"})
+database = create_database({"database_name": "cooperDB_demo"})
 print_database(database.database)
 
-parse_create_table({"database_name": "cooperDB_demo",
+create_table({"database_name": "cooperDB_demo",
                     "name": "clients",
                     "columns": [
                         { "name": "name",
@@ -43,7 +43,7 @@ parse_create_table({"database_name": "cooperDB_demo",
                         "column": "id" } }]
                     })
 
-parse_create_table({"database_name": "cooperDB_demo",
+create_table({"database_name": "cooperDB_demo",
                     "name": "addresses",
                     "columns": [
                         { "name": "name",
@@ -62,7 +62,7 @@ parse_create_table({"database_name": "cooperDB_demo",
 
 print_database(database.database)
 
-parse_insert_into_table({
+insert_into_table({
         "database_name": "cooperDB_demo",
         "table_name": "clients",
         "data": {
@@ -71,7 +71,7 @@ parse_insert_into_table({
         }
     })
 
-parse_insert_into_table({
+insert_into_table({
         "database_name": "cooperDB_demo",
         "table_name": "clients",
         "data": {
@@ -82,7 +82,7 @@ parse_insert_into_table({
 
 print_database(database.database)
 
-parse_insert_into_table({
+insert_into_table({
     "database_name": "cooperDB_demo",
     "table_name": "clients",
     "data": {
@@ -91,7 +91,7 @@ parse_insert_into_table({
     }
 })
 
-parse_insert_into_table({
+insert_into_table({
         "database_name": "cooperDB_demo",
         "table_name": "addresses",
         "data": {
@@ -100,7 +100,7 @@ parse_insert_into_table({
         }
     })
 
-parse_insert_into_table({
+insert_into_table({
         "database_name": "cooperDB_demo",
         "table_name": "addresses",
         "data": {
@@ -111,7 +111,7 @@ parse_insert_into_table({
 
 print_database(database.database)
 
-pprint(parse_join_tables({
+pprint(join_tables({
         "database_name": "cooperDB_demo",
         "table_name": "clients",
         "join_table_name": "addresses",
@@ -124,7 +124,7 @@ print_database(database.database)
 
 #print(DBCooper_Mapping["database_name"].database)
 
-parse_delete_row_from_table({
+delete_row_from_table({
         "database_name": "cooperDB_demo",
         "table_name": "clients",
         "data": {
@@ -136,7 +136,7 @@ print_database(database.database)
 
 
 
-parse_update_table({ 
+update_table({ 
         "database_name": "cooperDB_demo",
         "table_name": "clients",
         "search_data": {
