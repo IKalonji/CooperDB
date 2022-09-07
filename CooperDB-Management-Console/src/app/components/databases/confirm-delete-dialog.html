@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Delete Database {{ data.database }}?</h2>
+<div mat-dialog-content>
+    <p>Deleting database: {{ data.database }} will permanently delete your data. Are you sure you want to delete database {{ data.database }}?</p>
+</div>
+<div mat-dialog-actions class="row">
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button (click)="onConfirm()">Confirm</button>
+</div>

@@ -1,0 +1,37 @@
+.root{
+    height: 100%;
+    margin: 5px;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+}
+.col-start {
+    float: left;
+    min-width: 50%;
+}
+.col-end {
+    float: right;
+}
+.header{
+    padding: 5px;
+    text-align: center;
+}
+.card-spacer{
+    height: 5px;
+}
+input {
+    width: 100%;
+}
+a {
+    margin: 0 5px;
+    cursor: pointer;
+}
+.btn {
+    width: 100%;
+}
+.col-100 {
+    width: 100%;
+}

@@ -1,37 +1,162 @@
-<div class="selector">
-    <mat-form-field appearance="fill">
-        <mat-label>Select a Database</mat-label>
-        <mat-select [(value)]="selected">
-          <mat-option *ngFor="let database of databases" value="database">{{database}}</mat-option>
-          <mat-option *ngIf="databases.length == 0" value="none">No database available</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-button (click)="showDB()">Open Database</button>
-</div>
-<div class="separator"></div>
-<div *ngIf="displayDB">
-    <div  *ngFor="let table of displayDB.tables">
-        <mat-card class="table-cards">
-            <mat-card-title>Table: {{table.name}}</mat-card-title>
-            <mat-card-content>
-                <label>Columns</label>
-                <p *ngFor="let column of table.columns">{{column}}</p>
-              </mat-card-content>
-        </mat-card>
-        <div class="separator"></div>
+<div class="content">
+    <div class="row">
+        <div class="col-100">
+            <mat-form-field>
+                <mat-label>Select a Database</mat-label>
+                <mat-select [ngModel]="selected" (ngModelChange)="showDB($event)">
+                    <mat-option *ngFor="let db of databases" value={{db.name}}>{{db.name}}</mat-option>
+                    <mat-option *ngIf="databases.length == 0" value="none">No database available</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
-   
+    
+    <div class="separator"></div>
+
+    <div class="row" *ngIf="database">
+        <div class="col">
+            <h2>Tables</h2>
+        </div>
+        <div class="col">
+            <h2>Queries</h2>
+        </div>
+    </div>
+
+    <hr>
+    <div class="separator"></div>
+
+    <div class="row">
+        <div class="col">
+            <div *ngIf="database">
+                <div  *ngFor="let table of database.tables">
+                    <app-create-update-table [database]="database" [heading]="table.name" [table]="table" [tableNames]="tableNames"></app-create-update-table>
+                    <div class="separator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col" *ngIf="database">
+            <app-create-update-table [database]="database" [tableNames]="tableNames"></app-create-update-table>
+            <div class="separator"></div>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Insert Queries
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <hr>
+                <p>Hello</p>
+            </mat-expansion-panel>
+
+            <div class="separator"></div>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Select Queries
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <hr>
+                <p>Hello</p>
+            </mat-expansion-panel>
+            
+            <div class="separator"></div>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Update Queries
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <hr>
+                <p>Hello</p>
+            </mat-expansion-panel>
+            
+            <div class="separator"></div>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Delete Queries
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <hr>
+                <p>Hello</p>
+            </mat-expansion-panel>
+            
+            <div class="separator"></div>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Join Queries
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <hr>
+                <p>Hello</p>
+            </mat-expansion-panel>
+            
+            <div class="separator"></div>
+        </div>
+    </div>
 </div>
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
+
+
+
+    .content {
+        margin: 10px;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .row::after {
+        content: "";
+        clear: both;
+    }
+
+    .col {
+        float: left;
+        width: 100%;
+    }
     .selector{
-        padding: 10px;
-        text-align: center;
+        text-align: left;
     }
     .separator{
         height: 10px;
     }
-    .table-cards{
-        width: 300px;
+
+    button {
+        width: 100%;
     }
+
+    .columns {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .attributes {
+        width: 100%;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    @media only screen and (min-width: 600px) {
+        .col {
+            width: 50%;
+        }
+    }
+    
 </style>
