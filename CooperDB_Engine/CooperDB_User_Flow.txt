@@ -1,0 +1,19 @@
+1) User sumbits a request to create a database:
+    input:
+        {
+            wallet: address
+            database_name: address
+        }
+2) CooperDB generates a unique connection sting and generates a funding wallet and returns that to the admin
+    return:
+        {
+            result: OK
+            data: {
+                connection_string: "connection string",
+                database: "database"
+                generated_wallet: "wallet_address"
+                private_key: "private_key"
+            }
+        }
+3) Admin is required to store the wallet private key and the unique identifier for future storage requests.
+4) Any subsequent updates to the db should be accompanied by the connection string.

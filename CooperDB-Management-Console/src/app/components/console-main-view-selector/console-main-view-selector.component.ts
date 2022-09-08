@@ -15,4 +15,10 @@ export class ConsoleMainViewSelectorComponent implements OnInit {
     console.log(this.component)
   }
 
+  /*
+  notes:
+  Look into slots
+  
+  */
+
 }

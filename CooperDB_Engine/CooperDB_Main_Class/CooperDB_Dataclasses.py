@@ -31,3 +31,11 @@ class Column:
     name: str
     type: str
     attributes: Attribute
+
+@dataclass
+class DatabaseMapping:
+    name: str
+    database: Database
+    admin_wallet: str
+    funding_wallet: str
+    private_key: str

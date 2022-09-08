@@ -4,47 +4,45 @@ CooperQL_parser - Handle the parsing of the CooperQL input.
 
 '''
 
-DB-Cupa Domain specific language:
-
-
-
-
-
-
-
-
+DB-Cupa Domain specific language
 '''
 
-from ast import Raise
-import dataclasses
-from itertools import count
-from msilib.sequence import tables
-import re
-from DBCooper import CooperDB
-from DBCooper_Dataclasses import Database, Table, Column, ForeignKey, Attribute
-from pprint import pprint
-from terminaltables import AsciiTable, SingleTable, DoubleTable
+from CooperDB_Main_Class.CooperDB_Class import CooperDB
+from CooperDB_Main_Class.CooperDB_Dataclasses import Table, Column, ForeignKey, Attribute
+import uuid
 
-DBCooper_Mapping = {}
+"""
+Structure of CooperDB Mapping
+{
+    "<connection_string>": {
+        name: "<name>"
+        database_object: Database,
+        "origin_wallet": "address",
+        "generated_wallet": "address",
+        "private_key": "key"
+    }
+}
+"""
 
+CooperDB_Mapping = {}
 
-def parse_input(query, input_dict):
+def input(query, input_dict):
     """
     Parse the input string and return a list of tuples.
     """
     query_store = {
-        "create_database": parse_create_database,
-        "create_table": parse_create_table,
-        "insert_into_table": parse_insert_into_table,
-        "delete_database": parse_delete_database,
-        "delete_all_from_table": parse_delete_all_from_table,
-        "delete_row_from_table": parse_delete_row_from_table,
-        "delete_all_from_database": parse_delete_all_from_database,
-        "update_table": parse_update_table,
-        "get_value": parse_get_value,
-        "get_all_from_table": parse_get_all_from_table,
-        "get_all_from_database": parse_get_all_from_database,
-        "join_tables": parse_join_tables
+        "create_database": create_database,
+        "create_table": create_table,
+        "insert_into_table": insert_into_table,
+        "delete_database": delete_database,
+        "delete_all_from_table": delete_all_from_table,
+        "delete_row_from_table": delete_row_from_table,
+        "delete_all_from_database": delete_all_from_database,
+        "update_table": update_table,
+        "get_value": get_value,
+        "get_all_from_table": get_all_from_table,
+        "get_all_from_database": get_all_from_database,
+        "join_tables": join_tables
     }
 
     if query not in query_store.keys():
@@ -52,21 +50,23 @@ def parse_input(query, input_dict):
     return query_store[query](input_dict)
 
 
-def parse_create_database(input_dict):
+def create_database(input_dict):
     """
     Parse the input list and return a database object.
     example input list: Create a database
     {
+        admin_wallet: "wallet_address"
         database_name: "database_name"
     }
     """
-    if input_dict['database_name'] in DBCooper_Mapping:
+    if input_dict['database_name'] in CooperDB_Mapping:
         raise Exception("Database already exists")
     else:
-        DBCooper_Mapping[input_dict['database_name']] = CooperDB(input_dict['database_name'])
-        return DBCooper_Mapping[input_dict['database_name']]
+        CooperDB_Mapping[input_dict['database_name']] = CooperDB(input_dict['database_name'])
+        return CooperDB_Mapping[input_dict['database_name']]
 
-def parse_create_table(input_dict):
+
+def create_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Create a table in the database
@@ -117,19 +117,20 @@ def parse_create_table(input_dict):
             raise Exception("Missing key: {}".format(e))
 
 
-    if input_dict['name'] in DBCooper_Mapping[database].database.tables:
+    if input_dict['name'] in CooperDB_Mapping[database].database.tables:
         raise Exception("Table already exists")
     else:
-        DBCooper_Mapping[database].create_table(
+        CooperDB_Mapping[database].create_table(
             Table(
                 name=input_dict['name'],
                 columns=table_columns,
                 rows=[]
             )
         )
-        return DBCooper_Mapping[database].database.tables
+        return CooperDB_Mapping[database].database.tables
 
-def parse_insert_into_table(input_dict):
+
+def insert_into_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Insert into table
@@ -146,13 +147,14 @@ def parse_insert_into_table(input_dict):
     rows = input_dict['data']
     for row in rows:
         if ColumnExists(database_name, table_name, row):
-            tables = DBCooper_Mapping[database_name].database.tables
+            tables = CooperDB_Mapping[database_name].database.tables
             for table in tables:
                 if table.name == table_name:
                     table.rows.append(rows)
                     return table
 
-def parse_delete_database(input_dict):
+
+def delete_database(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Delete database
@@ -161,12 +163,13 @@ def parse_delete_database(input_dict):
     }
     """
     database = input_dict["database_name"]
-    if database not in DBCooper_Mapping:
+    if database not in CooperDB_Mapping:
         raise Exception("Database does not exists")
-    DBCooper_Mapping.pop(database)
+    CooperDB_Mapping.pop(database)
     return database
 
-def parse_delete_all_from_table(input_dict):
+
+def delete_all_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input dict: Delete all from table
@@ -178,13 +181,14 @@ def parse_delete_all_from_table(input_dict):
     database_name = input_dict["database_name"]
     table_name = input_dict["table_name"]
     if TableExists(database_name, table_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         for table in tables:
             if table.name == table_name:
                 table.rows = []
                 return table
 
-def parse_delete_row_from_table(input_dict):
+
+def delete_row_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Delete row from table
@@ -203,7 +207,7 @@ def parse_delete_row_from_table(input_dict):
     column_value = row[column_name]
 
     if ColumnExists(database_name, table_name, column_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         for table in tables:
             if table.name == table_name:
                 rows = table.rows
@@ -215,7 +219,8 @@ def parse_delete_row_from_table(input_dict):
                         if count >= len(rows):
                             return table
 
-def parse_delete_all_from_database(input_dict):
+
+def delete_all_from_database(input_dict):
     """
     Parse the input list and return a table list object.
     example input list: Delete all from database
@@ -225,7 +230,7 @@ def parse_delete_all_from_database(input_dict):
     """
     database_name = input_dict["database_name"]
     if DatabaseExists(database_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         count = 0
         for table in tables:
             count += 1
@@ -233,7 +238,8 @@ def parse_delete_all_from_database(input_dict):
             if count >= len(tables):
                 return tables
 
-def parse_update_table(input_dict):
+
+def update_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Update table
@@ -262,7 +268,7 @@ def parse_update_table(input_dict):
     for column_name in update_data.keys():
         ColumnExists(database_name, table_name, column_name)
     
-    tables = DBCooper_Mapping[database_name].database.tables
+    tables = CooperDB_Mapping[database_name].database.tables
     for table in tables:
         if table.name == table_name:
             rows = table.rows
@@ -276,11 +282,12 @@ def parse_update_table(input_dict):
                     if count >= len(search_data.keys()):
                         for update_column in update_data.keys():
                             row[update_column] = update_data[update_column]
-                            DBCooper_Mapping[database_name].db_commit()
+                            CooperDB_Mapping[database_name].db_commit()
                 if row_count >= len(rows):
                     return table
 
-def parse_get_value(input_dict):
+
+def get_value(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Get value
@@ -297,7 +304,7 @@ def parse_get_value(input_dict):
     column_value = input_dict["column_value"]
     values = []
     if ColumnExists(database_name, table_name, column_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         for table in tables:
             if table.name == table_name:
                 rows = table.rows
@@ -306,7 +313,8 @@ def parse_get_value(input_dict):
                         values.append(row)
     return values
 
-def parse_get_all_from_table(input_dict):
+
+def get_all_from_table(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Get all from table
@@ -319,13 +327,14 @@ def parse_get_all_from_table(input_dict):
     table_name = input_dict["table_name"]
     values = []
     if TableExists(database_name, table_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         for table in tables:
             if table.name == table_name:
                 values = table.rows
     return values
 
-def parse_get_all_from_database(input_dict):
+
+def get_all_from_database(input_dict):
     """
     Parse the input list and return a table list object.
     example input list: Get all from database
@@ -336,12 +345,13 @@ def parse_get_all_from_database(input_dict):
     database_name = input_dict["database_name"]
     values = []
     if DatabaseExists(database_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         for table in tables:
             values.append({ "table_name" : table.name, "rows": table.rows })
     return values
 
-def parse_join_tables(input_dict):
+
+def join_tables(input_dict):
     """
     Parse the input list and return a table object.
     example input list: Join tables
@@ -362,7 +372,7 @@ def parse_join_tables(input_dict):
     join_column_name = input_dict["join_column_name"]
     join_type = input_dict["join_type"]
     if TableExists(database_name, table_name) and TableExists(database_name, join_table_name):
-        tables = DBCooper_Mapping[database_name].database.tables
+        tables = CooperDB_Mapping[database_name].database.tables
         base_table_rows = []
         join_table_rows = []
         join_result = []
@@ -418,21 +428,28 @@ def parse_join_tables(input_dict):
             return join_result
     return None
 
+    #Notes:
+    #look into data science packages e.g numpy, panda, jupiter notebook.
+    #
+
+
 def DatabaseExists(database_name):
-    if database_name not in DBCooper_Mapping:
+    if database_name not in CooperDB_Mapping:
         raise Exception("Database '{}' does not exist".format(database_name))
     return True
 
+
 def TableExists(database_name, table_name):
     DatabaseExists(database_name)
-    for table in DBCooper_Mapping[database_name].database.tables:
+    for table in CooperDB_Mapping[database_name].database.tables:
         if table.name == table_name:
             return True
     raise Exception("Table '{}' does not exist".format(table_name))
 
+
 def ColumnExists(database_name, table_name, column_name):
     TableExists(database_name, table_name)
-    tables = DBCooper_Mapping[database_name].database.tables
+    tables = CooperDB_Mapping[database_name].database.tables
     for table in tables:
         if table.name == table_name:
             for column in table.columns:
