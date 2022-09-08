@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTableModule} from '@angular/material/table';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +25,7 @@ import { ManageDatabasesComponent } from './components/manage-databases/manage-d
 import { ManageSubscriptionComponent } from './components/manage-subscription/manage-subscription.component';
 import { ConsoleViewDirective } from './directives/console-view.directive';
 import { ConsoleMainViewSelectorComponent } from './components/console-main-view-selector/console-main-view-selector.component';
-import { CreateUpdateTableComponent } from './components/create-update-table/create-update-table.component';
+import { DataManipulationQueryComponent, ConfirmDialog } from './components/data-manipulation-query/data-manipulation-query.component';
 
 
 
@@ -44,7 +45,8 @@ import { CreateUpdateTableComponent } from './components/create-update-table/cre
     ConsoleMainViewSelectorComponent,
     ConfirmDeleteDialog,
     RenameDatabaseDialog,
-    CreateUpdateTableComponent
+    DataManipulationQueryComponent,
+    ConfirmDialog
   ],
   imports: [
     AngularMaterialImportsModule,
@@ -58,7 +60,8 @@ import { CreateUpdateTableComponent } from './components/create-update-table/cre
     MatFormFieldModule,
     MatInputModule,
     MatExpansionModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

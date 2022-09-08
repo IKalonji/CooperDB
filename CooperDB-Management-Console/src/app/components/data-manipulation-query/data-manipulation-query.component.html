@@ -1,0 +1,462 @@
+<div [ngSwitch]="query">
+    <div  *ngSwitchCase="'create_database'">
+        <mat-form-field class="attributes">
+            <mat-label>Database Name</mat-label>
+            <input matInput type="text" [(ngModel)]="createDatabaseData.database_name">
+        </mat-form-field>
+
+        <div class="separator"></div>
+
+        <button mat-raised-button (click)="createDatabase()" *ngIf="createDatabaseData.database_name">Create New Database</button>
+        
+        <div class="separator"></div>
+
+        <div *ngIf="createResults">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <div class="attributes border" *ngIf="createResults.status == 'error'" style="color: orange;">
+                <p>--> {{createResults.status}}: {{createResults.message}}</p>
+            </div>
+    
+            <div class="attributes border" *ngIf="createResults.status == 'success'" style="color: green;">
+                <p>--> {{createResults.status}}: {{createResults.message}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div  *ngSwitchCase="'delete_database'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Database</mat-label>
+            <mat-select [(ngModel)]="deleteDatabaseData.database_name">
+                <mat-option *ngFor="let db of databaseNames" [value]="db">
+                    {{db}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="separator"></div>
+
+        <button mat-raised-button (click)="deleteDatabase()" *ngIf="deleteDatabaseData.database_name">Delete Database</button>
+
+        <div class="separator"></div>
+
+        <div *ngIf="deleteResults">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <div class="attributes border" *ngIf="deleteResults.status == 'error'" style="color: orange;">
+                <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+            </div>
+    
+            <div class="attributes border" *ngIf="deleteResults.status == 'success'" style="color: green;">
+                <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'create_table'">
+        <mat-form-field class="attributes">
+            <mat-label>Table Name</mat-label>
+            <input matInput type="text" [(ngModel)]="createTableData.table_name">
+        </mat-form-field>
+
+        <label>Columns</label>
+
+        <div class="separator"></div>
+
+        <div *ngFor="let column of createTableData.columns">
+            <mat-card>
+                <mat-card-content>
+                    <div class="columns">
+                        <mat-form-field class="attributes">
+                            <mat-label>Name</mat-label>
+                            <input matInput type="text" [(ngModel)]="column.name">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="columns">
+                        <mat-form-field class="attributes">
+                            <mat-label>Type</mat-label>
+                            <mat-select [(ngModel)]="column.type">
+                                <mat-option *ngFor="let type of types" [value]="type">
+                                    {{type}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <label>Attributes</label>
+
+                    <div class="separator"></div>
+
+                    <div class="columns">
+                        <div class="attributes">
+                            <mat-checkbox [(ngModel)]="column.attributes.primary_key">Primary Key</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="attributes">
+                            <mat-checkbox matInput type="text" [(ngModel)]="column.attributes.unique">Unique</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <label>Foreign Key</label>
+
+                    <div class="separator"></div>
+
+                    <div class="columns">
+                        <mat-form-field class="attributes">
+                            <mat-label>Reference Table</mat-label>
+                            <mat-select [(ngModel)]="column.attributes.foreign_key.table">
+                                <div *ngFor="let tableName of tableNames">
+                                    <mat-option *ngIf="tableName != createTableData.name" [value]="tableName">
+                                        {{tableName}}
+                                    </mat-option>
+                                </div>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="columns">
+                        <mat-form-field class="attributes">
+                            <mat-label>Reference Column</mat-label>
+                            <mat-select [(ngModel)]="column.attributes.foreign_key.column">
+                                <mat-option *ngFor="let columnName of getColumnNames(column.attributes.foreign_key.table)" [value]="columnName">
+                                    {{columnName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="separator"></div>
+                    <div class="columns">
+
+                        <div class="attributes">
+                            <button mat-raised-button color="warn" (click)="removeColumn(column.name)">Remove Column</button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="separator"></div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="columns">
+            <div class="attributes">
+                <button mat-raised-button color="accent" (click)="createEmptyColumn()">Add Column</button>
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <button mat-raised-button (click)="createTable()" *ngIf="createTableData.table_name">Create New Table</button>
+
+        <div class="separator"></div>
+
+        <div *ngIf="createResults">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <div class="attributes border" *ngIf="createResults.status == 'error'" style="color: orange;">
+                <p>--> {{createResults.status}}: {{createResults.message}}</p>
+            </div>
+    
+            <div class="attributes border" *ngIf="createResults.status == 'success'" style="color: green;">
+                <p>--> {{createResults.status}}: {{createResults.message}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'insert_into_table'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="insertIntoTableData.table_name" (ngModelChange)="setInsertColumn($event)">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="separator"></div>
+
+        <div *ngIf="insertIntoTableData.table_name">
+            <label>Columns</label>
+            <div class="separator"></div>
+
+            <mat-form-field class="attributes" *ngFor="let key of getKeys(insertIntoTableData.data)">
+                <mat-label>{{key}}</mat-label>
+                <input matInput type="text" [(ngModel)]="insertIntoTableData.data[key]">
+            </mat-form-field>
+
+            <button mat-raised-button (click)="insertIntoTable()">Insert Into Table</button>
+        </div>
+
+        <div *ngIf="insertIntoTableResults">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <table class="attributes">
+                <thead>
+                    <tr>
+                        <th *ngFor="let key of getKeys(insertIntoTableResults)">{{key}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td *ngFor="let key of getKeys(insertIntoTableResults)">{{insertIntoTableResults[key]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'delete_all_from_database'">
+        <button mat-raised-button (click)="deleteAllFromDatabase()">Delete All From Database</button>
+
+        <div class="separator"></div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'error'" style="color: orange;">
+            <p>-- {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'success'" style="color: green;">
+            <p>-- {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'delete_all_from_table'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="deleteAllFromTableData.table_name">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="deleteAllFromTable()">Delete All From Table</button>
+
+        <div class="separator"></div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'error'" style="color: orange;">
+            <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'success'" style="color: green;">
+            <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'delete_row_from_table'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="deleteRowFromTableData.table_name">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="deleteRowFromTableData.table_name" class="attributes">
+            <mat-label>Select Column</mat-label>
+            <mat-select [(ngModel)]="deleteRowFromTableData.column_name">
+                <mat-option *ngFor="let column of getColumnNames(deleteRowFromTableData.table_name)" [value]="column">
+                    {{column}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="deleteRowFromTableData.column_name" class="attributes">
+            <mat-label>Search Value</mat-label>
+            <input matInput type="text" [(ngModel)]="deleteRowFromTableData.column_value">
+        </mat-form-field>
+        
+        <button mat-raised-button (click)="deleteRowFromTable()">Delete Row From Table</button>
+        
+        <div class="separator"></div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'error'" style="color: orange;">
+            <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+
+        <div class="attributes border" *ngIf="deleteResults && deleteResults.status == 'success'" style="color: green;">
+            <p>--> {{deleteResults.status}}: {{deleteResults.message}}</p>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'get_value'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="getValueData.table_name">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="getValueData.table_name" class="attributes">
+            <mat-label>Select Column</mat-label>
+            <mat-select [(ngModel)]="getValueData.column_name">
+                <mat-option *ngFor="let column of getColumnNames(getValueData.table_name)" [value]="column">
+                    {{column}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="getValueData.column_name" class="attributes">
+            <mat-label>Search Value</mat-label>
+            <input matInput type="text" [(ngModel)]="getValueData.column_value">
+        </mat-form-field>
+
+        <button *ngIf="getValueData.column_value" mat-raised-button (click)="getValue()">Get Value</button>
+
+        <div *ngIf="getValueResults.length > 0">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <table class="attributes">
+                <thead>
+                    <tr>
+                        <th *ngFor="let elem of getValueCols">{{elem}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let col of getValueResults">
+                        <td *ngFor="let cell of getValueCols">{{col[cell]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'get_all_from_database'">
+        <button mat-raised-button (click)="getAllFromDatabase()">Get All From Database</button>
+
+        <div *ngIf="getTablesResults.length > 0">
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <div *ngFor="let table of getTablesResults">
+                <div class="separator"></div>
+                <label>Table: {{table.table}}</label>
+                <div class="separator"></div>
+                <table class="attributes" *ngIf="table.rows.length > 0">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let row of getTablesCols[getTablesResults.indexOf(table)]">{{row}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of table.rows">
+                            <td *ngFor="let cell of getTablesCols[getTablesResults.indexOf(table)]">{{row[cell]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'get_all_from_table'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="getAllFromTableData.table_name">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="getAllFromTable()">Get All From Table</button>
+
+        <div>
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <table class="attributes" *ngIf="getValueResults.length > 0">
+                <thead>
+                    <tr>
+                        <th *ngFor="let elem of getValueCols">{{elem}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let col of getValueResults">
+                        <td *ngFor="let cell of getValueCols">{{col[cell]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div  *ngSwitchCase="'join_tables'">
+        <mat-form-field class="attributes">
+            <mat-label>Select Table</mat-label>
+            <mat-select [(ngModel)]="joinTablesData.table_name">
+                <mat-option *ngFor="let tableName of tableNames" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="attributes" *ngIf="joinTablesData.table_name">
+            <mat-label>Select Join Table</mat-label>
+            <mat-select [(ngModel)]="joinTablesData.join_table_name">
+                <mat-option *ngFor="let tableName of getTableNamesExcept(joinTablesData.table_name)" [value]="tableName">
+                    {{tableName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="attributes" *ngIf="joinTablesData.join_table_name">
+            <mat-label>Select Join Column</mat-label>
+            <mat-select [(ngModel)]="joinTablesData.join_column_name">
+                <mat-option *ngFor="let columnName of getColumnNames(joinTablesData.table_name)" [value]="columnName">
+                    {{columnName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="attributes" *ngIf="joinTablesData.join_column_name">
+            <mat-label>Select Join Type</mat-label>
+            <mat-select [(ngModel)]="joinTablesData.join_type">
+                <mat-option *ngFor="let join of joinTypes" [value]="join.type">
+                    {{join.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <button mat-raised-button *ngIf="joinTablesData.join_type" (click)="joinTables()">Join Tables</button>
+
+        <div>
+            <div class="separator"></div>
+            <label>Results</label>
+            <hr>
+            <table class="attributes" *ngIf="getValueResults.length > 0">
+                <thead>
+                    <tr>
+                        <th *ngFor="let elem of getValueCols">{{elem}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let col of getValueResults">
+                        <td *ngFor="let cell of getValueCols">{{col[cell]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p *ngSwitchDefault>No Query Type Selected.</p>
+</div>
+
+<style>
+    .border {
+        border: 1px solid gray;
+        border-radius: 4px;
+        padding: 5px 10px;
+    }
+</style>

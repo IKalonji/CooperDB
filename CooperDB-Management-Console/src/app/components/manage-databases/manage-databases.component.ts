@@ -20,6 +20,56 @@ export class ManageDatabasesComponent implements OnInit {
 
   newTable: any;
 
+  selectedQuery:string = "";
+
+  queries: any[] = [
+    {
+      query: "create_database",
+      description: "Create Database"
+    },
+    {
+      query: "create_table",
+      description: "Create Table"
+    },
+    {
+      query: "delete_all_from_database",
+      description: "Delete All From Database"
+    },
+    {
+      query: "delete_all_from_table",
+      description: "Delete All From Table"
+    },
+    {
+      query: "delete_database",
+      description: "Delete Database"
+    },
+    {
+      query: "delete_row_from_table",
+      description: "Delete Row From Table"
+    },
+    {
+      query: "get_all_from_database",
+      description: "Get All From Database"
+    },
+    {
+      query: "get_all_from_table",
+      description: "Get All From Table"
+    },
+    {
+      query: "get_value",
+      description: "Get Value"
+    },
+    {
+      query: "insert_into_table",
+      description: "Insert Into Table"
+    },
+    {
+      query: "join_tables",
+      description: "Join Tables"
+    }
+  ]
+
+
   types: string[] = [
     "String", "Integer", "Boolean"
   ];
@@ -34,9 +84,12 @@ export class ManageDatabasesComponent implements OnInit {
     this.createEmptyTable();
   }
 
-  showDB(database: any){
-    this.database = this.databaseService.getDatabase(database)
-    console.log(this.database);
+  getDatabaseNames(): string[] {
+    return this.databases.map(d => d.name);
+  }
+
+  showDB(database: any): void {
+    this.database = this.databaseService.getDatabase(database);
     this.tableNames = this.database.tables.map((t:Table) => t.name);
   }
 
@@ -59,6 +112,10 @@ export class ManageDatabasesComponent implements OnInit {
     }
   }
 
+  dummyArray(obj:any) {
+    return [0];
+  }
+
   createEmptyTable() : void {
     this.newTable = {
       name: "",
@@ -66,5 +123,4 @@ export class ManageDatabasesComponent implements OnInit {
       columns: [this.newColumn]
     }
   }
-
 }

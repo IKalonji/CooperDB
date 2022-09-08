@@ -1,7 +1,7 @@
 <div class="content">
     <div class="row">
-        <div class="col-100">
-            <mat-form-field>
+        <div class="col-25">
+            <mat-form-field class="attributes">
                 <mat-label>Select a Database</mat-label>
                 <mat-select [ngModel]="selected" (ngModelChange)="showDB($event)">
                     <mat-option *ngFor="let db of databases" value={{db.name}}>{{db.name}}</mat-option>
@@ -9,95 +9,95 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <div class="col-75"></div>
     </div>
     
     <div class="separator"></div>
 
     <div class="row" *ngIf="database">
-        <div class="col">
-            <h2>Tables</h2>
-        </div>
-        <div class="col">
+        <div class="col-75">
             <h2>Queries</h2>
+        </div>
+        <div class="col-25">
+            <h2>Tables</h2>
         </div>
     </div>
 
     <hr>
     <div class="separator"></div>
 
-    <div class="row">
-        <div class="col">
-            <div *ngIf="database">
-                <div  *ngFor="let table of database.tables">
-                    <app-create-update-table [database]="database" [heading]="table.name" [table]="table" [tableNames]="tableNames"></app-create-update-table>
-                    <div class="separator"></div>
-                </div>
+    <div class="row" *ngIf="database">
+        <div class="col-75">
+            <mat-form-field class="attributes">
+                <mat-label>Choose Query</mat-label>
+                <mat-select [(ngModel)]="selectedQuery">
+                    <mat-option *ngFor="let query of queries" [value]="query.query">
+                        {{query.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div *ngFor="let table of database.tables">
+                <app-data-manipulation-query *ngIf="database.tables.indexOf(table) == 0" [database]="database" [tableNames]="tableNames" [databaseNames]="getDatabaseNames()" [query]="selectedQuery"></app-data-manipulation-query>
             </div>
         </div>
 
-        <div class="col" *ngIf="database">
-            <app-create-update-table [database]="database" [tableNames]="tableNames"></app-create-update-table>
-            <div class="separator"></div>
+        <div class="col-25">
+            <div>
+                <div  *ngFor="let table of database.tables">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{table.name}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
 
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Insert Queries
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <hr>
-                <p>Hello</p>
-            </mat-expansion-panel>
+                        <label>Columns</label>
+                        <div class="separator"></div>
 
-            <div class="separator"></div>
+                        <div *ngFor="let column of table.columns">
+                            <mat-card>
+                                <label>Column: {{column.name}}</label>
+                                <div class="ml-10">
+                                    <div class="col">
+                                        <mat-label>Name:</mat-label>
+                                        <mat-label class="text-right">{{column.name}}</mat-label>
+                                    </div>
+                                    <div class="col">
+                                        <mat-label>Type:</mat-label>
+                                        <mat-label class="text-right">{{column.type}}</mat-label>
+                                    </div>
+                                </div>
 
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Select Queries
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <hr>
-                <p>Hello</p>
-            </mat-expansion-panel>
-            
-            <div class="separator"></div>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Update Queries
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <hr>
-                <p>Hello</p>
-            </mat-expansion-panel>
-            
-            <div class="separator"></div>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Delete Queries
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <hr>
-                <p>Hello</p>
-            </mat-expansion-panel>
-            
-            <div class="separator"></div>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Join Queries
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <hr>
-                <p>Hello</p>
-            </mat-expansion-panel>
-            
-            <div class="separator"></div>
+                                <label>Attributes</label>
+                                <div class="ml-10">
+                                    <div class="col">
+                                        <mat-label>Is Primary Key:</mat-label>
+                                        <mat-label class="text-right">{{column.attributes.primary_key}}</mat-label>
+                                    </div>
+                                    <div class="col">
+                                        <mat-label>Is Unique:</mat-label>
+                                        <mat-label class="text-right">{{column.attributes.unique}}</mat-label>
+                                    </div>
+                                </div>
+                                <label>Foreign Key</label>
+                                <div class="ml-10">
+                                    <div class="col">
+                                        <mat-label>Ref Table:</mat-label>
+                                        <mat-label class="text-right">{{column.attributes.foreign_key.table ? column.attributes.foreign_key.table : "none"}}</mat-label>
+                                    </div>
+                                    <div class="col">
+                                        <mat-label>Ref Column:</mat-label>
+                                        <mat-label class="text-right">{{column.attributes.foreign_key.column ? column.attributes.foreign_key.column : "none"}}</mat-label>
+                                    </div>
+                                </div>
+                            </mat-card>
+                            <div class="separator"></div>
+                        </div>
+                    </mat-expansion-panel>
+                    <div class="separator"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -107,7 +107,16 @@
         box-sizing: border-box;
     }
 
+    .text-right {
+        text-align: right;
+    }
 
+    .ml-10 {
+        display: flex;
+        flex-direction: column;
+        margin: 0 5px;
+        width: 100%;
+    }
 
     .content {
         margin: 10px;
@@ -125,9 +134,23 @@
     }
 
     .col {
-        float: left;
+        display: flex;
+        justify-content: space-between;
+        min-width: 100%;
+    }
+
+    .col-25 {
+        width: 35%;
+    }
+
+    .col-75 {
+        width: 75%;
+    }
+
+    .col-75 {
         width: 100%;
     }
+
     .selector{
         text-align: left;
     }

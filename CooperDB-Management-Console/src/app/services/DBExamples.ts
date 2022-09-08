@@ -9,7 +9,7 @@ export class DBExamples {
                     "columns": 
                     [
                         {
-                            "name": "Id", 
+                            "name": "Id2", 
                             "type": "Integer",
                             "attributes": 
                             {
@@ -23,7 +23,7 @@ export class DBExamples {
                             }
                         },
                         {
-                            "name": "Name", 
+                            "name": "Name2", 
                             "type": "String",
                             "attributes": 
                             {
@@ -39,16 +39,16 @@ export class DBExamples {
                     ],
                     "rows": 
                     [
-                        {"Id": "1", "Name": "Mothupi"},
-                        {"Id": "2", "Name": "Mike"}
+                        {"Id2": "1", "Name2": "Mothupi2"},
+                        {"Id2": "2", "Name2": "Mike2"}
                     ],
-                    "name": "EmployeeName"
+                    "name": "EmployeeName2"
                 },
                 {
                     "columns": 
                     [
                         {
-                            "name": "Id", 
+                            "name": "Id2", 
                             "type": "Integer",
                             "attributes": 
                             {
@@ -62,7 +62,7 @@ export class DBExamples {
                             }
                         },
                         {
-                        "name": "NameId", 
+                        "name": "NameId2", 
                         "type": "String",
                         "attributes": 
                         {
@@ -70,13 +70,13 @@ export class DBExamples {
                             "unique": false,
                             "foreign_key": 
                             {
-                                "table": "EmployeeName",
+                                "table": "EmployeeName2",
                                 "column": "Id"
                             }
                         }
                         },
                         {
-                        "name": "Surname", 
+                        "name": "Surname2", 
                         "type": "String",
                         "attributes": 
                         {
@@ -92,11 +92,11 @@ export class DBExamples {
                     ],
                     "rows": 
                     [
-                        {"Id": 1, "NameId": 1, "Surname": "Ramogayana"},
-                        {"Id": 2, "NameId": 1 , "Surname": "Rams"},
-                        {"Id": 3, "NameId": 2 , "Surname": "May"}
+                        {"Id2": 1, "NameId2": 1, "Surname2": "Ramogayana2"},
+                        {"Id2": 2, "NameId2": 1 , "Surname2": "Rams2"},
+                        {"Id2": 3, "NameId2": 2 , "Surname2": "May2"}
                     ],
-                    "name": "EmployeeSurname"
+                    "name": "EmployeeSurname2"
                 }
             ]
         },

@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>{{data.header}}</h2>
+<div mat-dialog-content>{{data.body}}</div>
+<div class="separator"></div>
+<div class="columns">
+    <div class="attributes">
+        <button mat-raised-button (click)="onCancel()">Cancel</button>
+    </div>
+    <div class="attributes">
+        <button mat-raised-button (click)="onConfirm()">Confirm</button>
+    </div>
+</div>
