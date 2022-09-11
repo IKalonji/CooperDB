@@ -19,12 +19,12 @@
   <h3 align="center">CooperDB</h3>
 
   <p align="center">
-    Relational Database Management built on top of IPFS/Filecoin. 
+    Relational Database Management built on top of IPFS/Filecoin and FilSwan MCS. 
     <br />
     <a href="https://github.com/IKalonji/CooperDB/blob/main/README.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://youtu.be/mmEXSMz2a9o">View Demo</a>
+    <a href="https://youtu.be/pLqrLngBJcg">View Demo</a>
     ·
     <a href="https://github.com/IKalonji/CooperDB/issues">Report Bug</a>
     ·
@@ -41,9 +41,24 @@ for handling data.
 Although there exist database options on IPFS like OrbitDB which handle key-value stores, we do not have a robust relational database framework in
 the web3 space which results in may developers using the traditional web2 database options like MySQL and Postgres.
 
+## Build log
+
+### Web3 Infinity Hackathon
+* Built a basic database engine POC
+
+### Data DAO Hackathon
+* Developer Console
+* Integrate MCS [filswan](https://docs.filswan.com/multi-chain-storage/developer-quickstart/sdk/python-mcs-sdk/get-started)
+* Improved the initial Database logic
+
 ## Demo Video
 
-[![DEMO](https://img.youtube.com/vi/mmEXSMz2a9o/0.jpg)](https://youtu.be/mmEXSMz2a9o)
+#### Current Iteration Demo
+[![Second-Iteration](https://img.youtube.com/vi/pLqrLngBJcg/0.jpg)](https://youtu.be/pLqrLngBJcg)
+https://youtu.be/pLqrLngBJcg
+
+### First Iteration Demo
+[![First-Iteration](https://img.youtube.com/vi/mmEXSMz2a9o/0.jpg)](https://youtu.be/mmEXSMz2a9o)
 
 ## How it works
 
@@ -83,6 +98,7 @@ Example request to create a table (Code is well documents, please browse through
 ## Built with:
 
 * Python
+* FilSwan MCS
 * Angular
 * Chainlink
 * Polygon
@@ -102,6 +118,8 @@ Mainly, creating a Lexer for parsing requests and implementing a Keeper for subs
 
 ## Running the project
 
+### CooperDB Engine
+
 * Requires Python 3.6+
 * API KEY from Tatum for IPFS data storage
 
@@ -117,9 +135,18 @@ git clone https://github.com/IKalonji/CooperDB.git
 
 4. Now you can play around with the different functionalities.
 
+### CooperDB Developer Console
+
+1. cd into CooperDB-Management-Console
+
+2. Run npm install
+
+3. Run ng serve --open
+
 ## Acknowledgements
 
 * IPFS/Filecoin
+* FilSwan
 * Encode Club
 * Chainlink
 

@@ -10,5 +10,9 @@ export const Sponsors = [
     {
         "name": "Polygon",
         "logo": "../assets/polygon.jpg"
+    },
+    {
+        "name": "FilSwan",
+        "logo": "../assets/filswan.png"
     }
 ]
