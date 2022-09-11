@@ -118,18 +118,20 @@ export class DataManipulationQueryComponent implements OnInit {
   constructor(private dbService: CooperDbService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    if(this.tableNames.length == 0) {
-      this.tableNames = this.database.tables.map((t:Table) => t.name);
-    }
+    if(this.database) {
+      if(this.tableNames.length == 0) {
+        this.tableNames = this.database.tables.map((t:Table) => t.name);
+      }
     
-    this.getValueData.database_name = this.database.name;
-    this.getAllFromTableData.database_name = this.database.name;
-    this.insertIntoTableData.database_name = this.database.name;
-    this.deleteAllFromDatabaseData.database_name = this.database.name;
-    this.deleteAllFromTableData.database_name = this.database.name;
-    this.deleteRowFromTableData.database_name = this.database.name;
-    this.joinTablesData.database_name = this.database.name;
-    this.createTableData.database_name = this.database.name;
+      this.getValueData.database_name = this.database.name;
+      this.getAllFromTableData.database_name = this.database.name;
+      this.insertIntoTableData.database_name = this.database.name;
+      this.deleteAllFromDatabaseData.database_name = this.database.name;
+      this.deleteAllFromTableData.database_name = this.database.name;
+      this.deleteRowFromTableData.database_name = this.database.name;
+      this.joinTablesData.database_name = this.database.name;
+      this.createTableData.database_name = this.database.name;
+    }
   }
 
   getKeys(obj: any) : string[] {
@@ -196,6 +198,10 @@ export class DataManipulationQueryComponent implements OnInit {
   createTable() {
     this.createTableData.database_name = this.database.name;
     this.createResults = this.dbService.execute(this.query, this.createTableData);
+
+    if(this.database.tables.length == 1 && this.database.tables[0].name == "") {
+      this.database.tables.slice(0, 1);
+    }
   }
 
   getValue() {

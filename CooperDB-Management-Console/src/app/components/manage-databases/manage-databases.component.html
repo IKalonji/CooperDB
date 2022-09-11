@@ -1,6 +1,6 @@
 <div class="content">
     <div class="row">
-        <div class="col-25">
+        <div class="col-75">
             <mat-form-field class="attributes">
                 <mat-label>Select a Database</mat-label>
                 <mat-select [ngModel]="selected" (ngModelChange)="showDB($event)">
@@ -9,16 +9,16 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-75"></div>
+        <div class="col-25"></div>
     </div>
     
     <div class="separator"></div>
 
-    <div class="row" *ngIf="database">
+    <div class="row">
         <div class="col-75">
             <h2>Queries</h2>
         </div>
-        <div class="col-25">
+        <div class="col-25" *ngIf="database">
             <h2>Tables</h2>
         </div>
     </div>
@@ -26,7 +26,7 @@
     <hr>
     <div class="separator"></div>
 
-    <div class="row" *ngIf="database">
+    <div class="row">
         <div class="col-75">
             <mat-form-field class="attributes">
                 <mat-label>Choose Query</mat-label>
@@ -36,14 +36,22 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <div *ngFor="let table of database.tables">
-                <app-data-manipulation-query *ngIf="database.tables.indexOf(table) == 0" [database]="database" [tableNames]="tableNames" [databaseNames]="getDatabaseNames()" [query]="selectedQuery"></app-data-manipulation-query>
+            <div *ngIf="database">
+                <div *ngFor="let table of database.tables">
+                    <app-data-manipulation-query *ngIf="database.tables.indexOf(table) == 0" [database]="database" [tableNames]="tableNames" [databaseNames]="getDatabaseNames()" [query]="selectedQuery"></app-data-manipulation-query>
+                </div>
+            </div>
+            <div *ngIf="!database">
+                <app-data-manipulation-query [database]="database" [databaseNames]="getDatabaseNames()" [query]="selectedQuery"></app-data-manipulation-query>
             </div>
         </div>
 
-        <div class="col-25">
+        <div class="col-25" *ngIf="database">
             <div>
-                <div  *ngFor="let table of database.tables">
+                <div *ngIf="database.tables.length == 0">
+                    <p>Database Has No Tables Yet.</p>
+                </div>
+                <div *ngFor="let table of database.tables">
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -144,7 +152,7 @@
     }
 
     .col-75 {
-        width: 75%;
+        width: 65%;
     }
 
     .col-75 {
