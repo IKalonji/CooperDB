@@ -22,7 +22,9 @@ export class ManageDatabasesComponent implements OnInit {
 
   selectedQuery:string = "";
 
-  queries: any[] = [
+  queries: any [] = [];
+
+  query_store: any[] = [
     {
       query: "create_database",
       description: "Create Database"
@@ -82,6 +84,15 @@ export class ManageDatabasesComponent implements OnInit {
     this.databases = this.databaseService.getDatabases();
     this.createEmptyColumn();
     this.createEmptyTable();
+
+    if(this.database) {
+      this.queries = this.query_store;
+      if(this.database.tables.length == 0) {
+        this.database.tables.push(this.newTable);
+      }
+    } else {
+      this.queries = this.query_store.filter(q => q.query == "create_database");
+    }
   }
 
   getDatabaseNames(): string[] {
@@ -91,6 +102,15 @@ export class ManageDatabasesComponent implements OnInit {
   showDB(database: any): void {
     this.database = this.databaseService.getDatabase(database);
     this.tableNames = this.database.tables.map((t:Table) => t.name);
+
+    if(this.database) {
+      this.queries = this.query_store;
+      if(this.database.tables.length == 0) {
+        this.database.tables.push(this.newTable);
+      }
+    } else {
+      this.queries = this.query_store.filter(q => q.query == "create_database");
+    }
   }
 
   getColumnNames(tableName: string): string[] {
