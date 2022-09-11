@@ -116,6 +116,7 @@ export class CooperDbService {
 
   // For Demostration To Be Removed
   insertIntoTable(query: string, input: any): any {
+    console.log(input);
     let results: any = {}
     let db = this.databases.find(d => d.name == input.database_name);
     if(db) {
